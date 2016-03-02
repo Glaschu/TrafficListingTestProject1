@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/jamesglasgow/Documents/TrafficListingTestProject1/app/build/intermediates/res/merged/debug/layout/main.xml",
+        "source": "/Users/jamesglasgow/Documents/TrafficListingTestProject1/app/src/main/res/layout/main.xml"
+    },
+    {
+        "merged": "/Users/jamesglasgow/Documents/TrafficListingTestProject1/app/build/intermediates/res/merged/debug/layout/listlayout.xml",
+        "source": "/Users/jamesglasgow/Documents/TrafficListingTestProject1/app/src/main/res/layout/listlayout.xml"
+    }
+]
