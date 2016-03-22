@@ -4,13 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.SystemClock;
 import android.util.Log;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 public class TrafficListingTestProject extends Activity implements View.OnClickListener
@@ -26,11 +29,13 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 	private Button Current;
 	private Button Incident;
 	private ListView RssEntryListView;
+	private Integer Num;
+	public LinkedList<RoadInfo> alist = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
-
+		//LinkedList<RoadInfo> alist = null;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		 RssEntryListView = (ListView) findViewById(R.id.listDis);
@@ -47,31 +52,122 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 
 
 	}
+	private class ShowDialogAsyncTask extends AsyncTask<Void, Integer, Void>
+	{
+
+		int progress_status;
+
+		@Override
+		protected void onPreExecute()
+		{
+			// update the UI immediately after the task is executed
+			super.onPreExecute();
+
+			//Toast.makeText(TrafficListingTestProject.this, "Invoke onPreExecute()", Toast.LENGTH_SHORT).show();
+
+			progress_status = 0;
+			//txt_percentage.setText("Downloading 0%");
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+
+			while(progress_status<100)
+			{
+
+				progress_status += 100;
+
+				publishProgress(progress_status);
+				// Sleep but normally do something useful here such as access a web resource
+				//SystemClock.sleep(300); // or Thread.sleep(300);
+				if (Num==1)
+				{
+
+					Htmlparser info =new Htmlparser();
+					alist=info.ParseStart(PlanedUrl);
+
+				}
+				if (Num==2)
+				{
+					//LinkedList<RoadInfo> alist = null;
+					Htmlparser info =new Htmlparser();
+					alist=info.ParseStart(CurrentUrl);
+					//RssEntryListView.setAdapter(new RssAdapter(this,alist));
+
+				}
+				if (Num==3)
+				{
+					//LinkedList<RoadInfo> alist = null;
+					Htmlparser info =new Htmlparser();
+					alist=info.ParseStart(IncidentUrl);
+					//RssEntryListView.setAdapter(new RssAdapter(this,alist));
+
+				}
+				// Really need to do some calculation on progress
+			}
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values)
+		{
+			super.onProgressUpdate(values);
+
+			//progressBar.setProgress(values[0]);
+
+			//txt_percentage.setText("Downloading " +values[0] + "%");
+
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			//Toast.makeText(TrafficListingTestProject.this,"Invoke onPostExecute()", Toast.LENGTH_SHORT).show();
+			RssEntryListView.setAdapter(new RssAdapter(TrafficListingTestProject.this,alist));
+			//txt_percentage.setText("Download complete");
+			//startButton.setEnabled(true);
+			//progressBar.setVisibility(View.INVISIBLE);
+
+		}
+
+	}
+
+
 
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		System.out.println("in on click");
 		if (v==Planed)
 		{
-			LinkedList<RoadInfo> alist = null;
-			Htmlparser info =new Htmlparser();
-			alist=info.ParseStart(PlanedUrl);
-			RssEntryListView.setAdapter(new RssAdapter(this,alist));
+			Num=1;
+			new ShowDialogAsyncTask().execute();
+			//LinkedList<RoadInfo> alist = null;
+			//Htmlparser info =new Htmlparser();
+			//alist=info.ParseStart(PlanedUrl);
+			//RssEntryListView.setAdapter(new RssAdapter(this,alist));
 		}
 		if (v==Current)
 		{
-			LinkedList<RoadInfo> alist = null;
-			Htmlparser info =new Htmlparser();
-			alist=info.ParseStart(CurrentUrl);
-			RssEntryListView.setAdapter(new RssAdapter(this,alist));
+
+			Num=2;
+			new ShowDialogAsyncTask().execute();
+			//LinkedList<RoadInfo> alist = null;
+			//Htmlparser info =new Htmlparser();
+			//alist=info.ParseStart(CurrentUrl);
+			//RssEntryListView.setAdapter(new RssAdapter(this,alist));
 
 		}
 		if (v==Incident)
 		{
-			LinkedList<RoadInfo> alist = null;
-			Htmlparser info =new Htmlparser();
-			alist=info.ParseStart(IncidentUrl);
-			RssEntryListView.setAdapter(new RssAdapter(this,alist));
+			Num=3;
+			new ShowDialogAsyncTask().execute();
+			//LinkedList<RoadInfo> alist = null;
+			//Htmlparser info =new Htmlparser();
+			//alist=info.ParseStart(IncidentUrl);
+			//RssEntryListView.setAdapter(new RssAdapter(this,alist));
 
 		}
 	}

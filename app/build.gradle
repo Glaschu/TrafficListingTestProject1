@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "org.me.myandroidstuff"
-        minSdkVersion 7
-        targetSdkVersion 7
+        minSdkVersion 17
+        targetSdkVersion 19
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_5
             targetCompatibility JavaVersion.VERSION_1_5

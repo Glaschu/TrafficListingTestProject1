@@ -74,8 +74,11 @@ public class Htmlparser {
                         }
                         else if (xpp.getName().equalsIgnoreCase("description")&&stared)
                         {
-                            //Info.setTitle(xpp.nextText());
-                            Info.setDiscription(xpp.nextText());
+                            //Info.setTitle(xpp.nextText());value.replaceAll("<br>","");
+                            String temp =xpp.nextText();
+                            temp = temp.replaceAll("<br />"," ");
+                            Info.setDiscription(temp);
+
                             Log.e("Testing", "description "+Info.getDiscription());
 
                         }else if (xpp.getName().equalsIgnoreCase("pubDate")&&stared)
