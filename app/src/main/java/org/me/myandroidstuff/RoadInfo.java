@@ -9,6 +9,7 @@ public class RoadInfo {
     private String Title;
     private String Discription;
     private String GPS;
+    private int startdate;
     private String PubDate;
 
     public RoadInfo()
@@ -18,7 +19,7 @@ public class RoadInfo {
         Discription="";
          GPS="";
         PubDate="";
-
+        startdate=0;
 
     }
 
@@ -74,6 +75,10 @@ public class RoadInfo {
         temp = Title + " ";
 
         return temp;
+    }
+    public void setStartDate(int date)
+    {
+        startdate = date;
     }
 
 }

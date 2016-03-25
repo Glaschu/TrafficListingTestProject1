@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by jamesglasgow on 22/02/16.
@@ -60,7 +62,7 @@ public class Htmlparser {
                         if(!stared){
                             stared=true;
                         }
-                        Log.e("MyTag", "Parsing error1");
+                       // Log.e("MyTag", "Parsing error1");
                     }
                     else
                         // Check which Tag we have
@@ -78,6 +80,7 @@ public class Htmlparser {
                             String temp =xpp.nextText();
                             temp = temp.replaceAll("<br />"," ");
                             Info.setDiscription(temp);
+                           Info.setStartDate(FindStartDate(temp));
 
                             Log.e("Testing", "description "+Info.getDiscription());
 
@@ -143,5 +146,59 @@ public class Htmlparser {
         }
 
     }
+
+    public int FindStartDate(String dis){
+        Pattern pattern = Pattern.compile("(?<=Start Date:).*?(?=-)");
+        Matcher matcher = pattern.matcher(dis);
+
+
+        boolean found = false;
+        while (matcher.find()) {
+
+            Log.e("DateFind ", matcher.group().toString());
+            String temp = matcher.group().toString();
+            Log.e("temp ", temp);
+            int re =datetoint(temp);
+            return re;
+            found = true;
+            //return matcher.group().toString();
+        }
+        if (!found) {
+            System.out.println("I didn't find the text");
+            return 0;
+        }
+
+        return 0;
+    }
+    public int datetoint(String Date){
+
+
+        Date = Date.replaceAll("Monday,","");
+        Date = Date.replaceAll("Tuesday,","");
+        Date = Date.replaceAll("Wednesday,","");
+        Date = Date.replaceAll("Thursday,","");
+        Date = Date.replaceAll("Friday,","");
+        Date = Date.replaceAll("Saturday,","");
+        Date = Date.replaceAll("Sunday,","");
+
+        Date = Date.replaceAll("January","01");
+        Date = Date.replaceAll("February","02");
+        Date = Date.replaceAll("March","03");
+        Date = Date.replaceAll("April","04");
+        Date = Date.replaceAll("May","05");
+        Date = Date.replaceAll("June","06");
+        Date = Date.replaceAll("July","07");
+        Date = Date.replaceAll("August","08");
+        Date = Date.replaceAll("September","09");
+        Date = Date.replaceAll("October","10");
+        Date = Date.replaceAll("November","11");
+        Date = Date.replaceAll("December","12");
+        Date = Date.replaceAll(" ","");
+        Log.e("DateFind ints", Date);
+        int temp = Integer.parseInt(Date);
+        Log.e("DateFind Integer", ""+temp);
+        return temp;
+    }
+
 
 }
