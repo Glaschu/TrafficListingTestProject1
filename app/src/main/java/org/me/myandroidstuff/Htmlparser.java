@@ -12,7 +12,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,9 +84,10 @@ public class Htmlparser {
                             //Info.setTitle(xpp.nextText());value.replaceAll("<br>","");
                             String temp =xpp.nextText();
                             temp = temp.replaceAll("<br />"," ");
+                            temp = temp.replaceAll("<br/>"," ");
                             Info.setDiscription(temp);
-                           Info.setStartDate(FindStartDate(temp));
-
+                            Info.setStartDate(FindStartDate(temp));
+                            Info.setEndDate(FindEndDate(temp));
                             Log.e("Testing", "description "+Info.getDiscription());
 
                         }else if (xpp.getName().equalsIgnoreCase("pubDate")&&stared)
@@ -147,7 +153,7 @@ public class Htmlparser {
 
     }
 
-    public int FindStartDate(String dis){
+    public Date FindStartDate(String dis){
         Pattern pattern = Pattern.compile("(?<=Start Date:).*?(?=-)");
         Matcher matcher = pattern.matcher(dis);
 
@@ -155,23 +161,47 @@ public class Htmlparser {
         boolean found = false;
         while (matcher.find()) {
 
-            Log.e("DateFind ", matcher.group().toString());
+            //Log.e("DateFind ", matcher.group().toString());
             String temp = matcher.group().toString();
-            Log.e("temp ", temp);
-            int re =datetoint(temp);
+            //Log.e("temp ", temp);
+            Date re =datetoint(temp);
             return re;
-            found = true;
+
             //return matcher.group().toString();
         }
         if (!found) {
             System.out.println("I didn't find the text");
-            return 0;
+            return null;
         }
 
-        return 0;
+        return null;
     }
-    public int datetoint(String Date){
 
+    public Date FindEndDate(String dis){
+        Pattern pattern = Pattern.compile("(?<=End Date:).*?(?=-)");
+        Matcher matcher = pattern.matcher(dis);
+
+
+        boolean found = false;
+        while (matcher.find()) {
+
+            //Log.e("DateFind ", matcher.group().toString());
+            String temp = matcher.group().toString();
+            //Log.e("temp ", temp);
+            Date re =datetoint(temp);
+            return re;
+
+            //return matcher.group().toString();
+        }
+        if (!found) {
+            System.out.println("I didn't find the text");
+            return null;
+        }
+
+        return null;
+    }
+    public Date datetoint(String Date){
+        Date Clean;
 
         Date = Date.replaceAll("Monday,","");
         Date = Date.replaceAll("Tuesday,","");
@@ -194,11 +224,29 @@ public class Htmlparser {
         Date = Date.replaceAll("November","11");
         Date = Date.replaceAll("December","12");
         Date = Date.replaceAll(" ","");
-        Log.e("DateFind ints", Date);
-        int temp = Integer.parseInt(Date);
-        Log.e("DateFind Integer", ""+temp);
-        return temp;
-    }
+        //Log.e("DateFind ints", Date);
+        Clean= StringtoDate(Date);
+        //int temp = Integer.parseInt(Date);
+       // Log.e("DateFind Integer", ""+temp);
 
+        return Clean;
+    }
+    public Date StringtoDate(String DateS){
+        String DateString =DateS;
+
+        DateFormat inputFormat = new SimpleDateFormat("ddMMyyyy");
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+
+        Date parsed = null;
+        try {
+            parsed = inputFormat.parse(DateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+       // String outputText = inputFormat.format(parsed);
+        //Log.e("DateFind DateClass", ""+outputText);
+        return parsed;
+    }
 
 }

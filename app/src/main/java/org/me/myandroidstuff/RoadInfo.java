@@ -1,5 +1,6 @@
 package org.me.myandroidstuff;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,7 +10,8 @@ public class RoadInfo {
     private String Title;
     private String Discription;
     private String GPS;
-    private int startdate;
+    private Date Startdate;
+    private Date Enddate;
     private String PubDate;
 
     public RoadInfo()
@@ -19,7 +21,8 @@ public class RoadInfo {
         Discription="";
          GPS="";
         PubDate="";
-        startdate=0;
+        Startdate=null;
+        Enddate=null;
 
     }
 
@@ -76,9 +79,21 @@ public class RoadInfo {
 
         return temp;
     }
-    public void setStartDate(int date)
+    public void setStartDate(Date date)
     {
-        startdate = date;
+        Startdate = date;
+    }
+    public void setEndDate(Date date)
+    {
+        Enddate = date;
+    }
+    public Date getStartDate()
+    {
+        return Startdate;
+    }
+    public Date getEndDate()
+    {
+        return Enddate;
     }
 
 }

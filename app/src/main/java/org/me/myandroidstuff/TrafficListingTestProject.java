@@ -1,9 +1,12 @@
 package org.me.myandroidstuff;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,9 +15,13 @@ import android.util.Log;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * Created by jamesglasgow on 23/02/16.
+ */
 
 public class TrafficListingTestProject extends Activity implements View.OnClickListener
 {
@@ -31,16 +38,21 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 	private ListView RssEntryListView;
 	private Integer Num;
 	public LinkedList<RoadInfo> alist = null;
+	public int Day_x,Month_x,Year_x;
+	static final int DIALOG_ID=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 
 		//LinkedList<RoadInfo> alist = null;
+		final Calendar cal= Calendar.getInstance();
+		Year_x=cal.get(Calendar.YEAR);
+		Month_x=cal.get(Calendar.MONTH);
+		Day_x=cal.get(Calendar.DAY_OF_MONTH);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		 RssEntryListView = (ListView) findViewById(R.id.listDis);
-
-
+		RssEntryListView = (ListView) findViewById(R.id.listDis);
 		Planed = (Button) findViewById(R.id.Planed);
 		Planed.setOnClickListener(this);
 		Current = (Button) findViewById(R.id.Current);
@@ -52,6 +64,24 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 
 
 	}
+	@Override
+	protected Dialog onCreateDialog(int id){
+	if(id==DIALOG_ID) {
+		return new DatePickerDialog(this, dpickerLister, Year_x, Month_x, Day_x);
+	}
+	return null;
+	}
+
+	private DatePickerDialog.OnDateSetListener dpickerLister= new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+			Year_x=year;
+			Month_x=monthOfYear;
+			Day_x=dayOfMonth;
+			String DateTemp=Day_x+""+Month_x+""+Year_x;
+			RssAdapter.SetSearchDateOn(DateTemp);
+		}
+	};
+
 	private class ShowDialogAsyncTask extends AsyncTask<Void, Integer, Void>
 	{
 
@@ -126,7 +156,8 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 		{
 			super.onPostExecute(result);
 			//Toast.makeText(TrafficListingTestProject.this,"Invoke onPostExecute()", Toast.LENGTH_SHORT).show();
-			RssEntryListView.setAdapter(new RssAdapter(TrafficListingTestProject.this,alist));
+			RssEntryListView.setAdapter(new RssAdapter(TrafficListingTestProject.this, alist));
+
 			//txt_percentage.setText("Download complete");
 			//startButton.setEnabled(true);
 			//progressBar.setVisibility(View.INVISIBLE);
@@ -142,6 +173,9 @@ public class TrafficListingTestProject extends Activity implements View.OnClickL
 		System.out.println("in on click");
 		if (v==Planed)
 		{
+			showDialog(DIALOG_ID);
+
+
 			Num=1;
 			new ShowDialogAsyncTask().execute();
 			//LinkedList<RoadInfo> alist = null;

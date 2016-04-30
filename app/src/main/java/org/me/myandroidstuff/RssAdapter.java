@@ -1,8 +1,13 @@
 package org.me.myandroidstuff;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +26,9 @@ public class RssAdapter extends BaseAdapter {
     private List<RoadInfo> items;
     private Context context;
     private LayoutInflater inflater;
-
+    private int test;
+    static boolean Searching =false;
+    static Date parsed = null;
     public RssAdapter(Context context, List<RoadInfo> items) {
         inflater = LayoutInflater.from(context);
         //this.context = context;
@@ -58,12 +65,31 @@ public class RssAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+       //test +=1;
+       //Log.e("listtest ",""+test);
        holder.textView1.setText(items.get(position).getTitle());
        holder.textView2.setText(items.get(position).getDiscription());
 
 
         return convertView;
+    }
+    public static void SetSearchDateOn(String DateS){
+        String DateString =DateS;
+
+        DateFormat inputFormat = new SimpleDateFormat("ddMMyyyy");
+        inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            parsed = inputFormat.parse(DateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public static void SearchBool(Boolean Bo){
+        if(!Bo){
+            Searching =false;
+        }else if(Bo){Searching =false;}
+
     }
 }
 
